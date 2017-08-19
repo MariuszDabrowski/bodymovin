@@ -1,5 +1,13 @@
 (function() {
 
+  var animation = bodymovin.loadAnimation({
+    container: document.querySelector('#bm'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'json/bike.json',
+  });
+
   var path = anime.path('.test');
 
   var motionPath = anime({
