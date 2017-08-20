@@ -64,16 +64,16 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
   fill: transparent;
   stroke: #4d3034;
   fill: #82b765;
-  stroke-width: 4;
+  stroke-width: 2;
   position: relative;
   z-index: 5;
 }
 
 .bike {
   position: absolute;
-  top: -41px;
+  top: -40px;
   left: -20px;
   width: 40px;
-  height: 83px;
+  height: 80px;
   z-index: 1;
 }
