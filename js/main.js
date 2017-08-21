@@ -107,7 +107,7 @@
 
     let distanceFromCloud = detectCollision(bikeMarker.getBoundingClientRect(), cloudBoundaryMarker.getBoundingClientRect());
 
-    if (distanceFromCloud < 80) {
+    if (distanceFromCloud < 60) {
       if(!bmContainer.classList.contains('active')) {
         bmContainer.classList.add('active');
         umbrella.setDirection(1);

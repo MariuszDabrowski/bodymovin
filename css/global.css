@@ -92,10 +92,6 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
   border: 1px dotted transparent;
 }
 
-#bm.active {
-  border: 1px solid red;
-}
-
 .bike svg {
   z-index: 20;
   position: relative;
@@ -103,7 +99,7 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
 
 .umbrella-animation {
   position: absolute;
-  top: -10px;
+  top: -12px;
   left: calc(50% + 2px);
   transform: translateX(-50%);
   width: 100%;
