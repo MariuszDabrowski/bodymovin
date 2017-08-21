@@ -23,7 +23,6 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
   height: 300px;
   border-radius: 100%;
   position: relative;
-  border: 1px dotted black;
 }
 
 .cloud-boundary {
@@ -34,7 +33,6 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
   left: 50%;
   transform: translateX(-50%);
   transform-origin: bottom center;
-  border: 1px dotted black;
 }
 
 .cloud-boundary__marker {
@@ -42,10 +40,8 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 4px;
-  height: 4px;
-  background: yellow;
-  border-radius: 100%;
+  width: 1px;
+  height: 1px;
 }
 
 .cloud {
@@ -87,17 +83,30 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 4px;
-  height: 4px;
-  background: yellow;
-  border-radius: 100%;
+  width: 1px;
+  height: 1px;
 }
 
 #bm {
   position: relative;
-  border: 1px dotted black;
+  border: 1px dotted transparent;
 }
 
 #bm.active {
   border: 1px solid red;
+}
+
+.bike svg {
+  z-index: 20;
+  position: relative;
+}
+
+.umbrella-animation {
+  position: absolute;
+  top: -10px;
+  left: calc(50% + 2px);
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 10;
+  /*background: red;*/
 }

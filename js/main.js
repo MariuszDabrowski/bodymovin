@@ -3,6 +3,7 @@
   const cludBoundary = document.querySelector('.cloud-boundary');
   const bike = document.querySelector('.bike');
   const bmContainer = document.querySelector('#bm');
+  const umbrellaAnimation = document.querySelector('.umbrella-animation');
 
   // ------------------------
   // Bodymovin bike animation
@@ -17,6 +18,16 @@
   });
 
   animation.setSpeed(1);
+
+  var umbrella = bodymovin.loadAnimation({
+    container: umbrellaAnimation,
+    renderer: 'svg',
+    loop: false,
+    autoplay: false,
+    path: 'json/umbrella.json',
+  });
+
+  umbrella.setSpeed(2);
 
   // ------------------------------
   // Anime.js animation around path
@@ -99,10 +110,14 @@
     if (distanceFromCloud < 80) {
       if(!bmContainer.classList.contains('active')) {
         bmContainer.classList.add('active');
+        umbrella.setDirection(1);
+        umbrella.play();
       }
     } else {
       if(bmContainer.classList.contains('active')) {
         bmContainer.classList.remove('active');
+        umbrella.setDirection(-1);
+        umbrella.play();
       }
     }
 
