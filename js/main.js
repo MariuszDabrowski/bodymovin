@@ -38,17 +38,11 @@
   // Detect collision between the bike and the cloud
   // -----------------------------------------------
 
-  const dot = document.querySelector('.dot');
+  const bikeMarker = document.querySelector('.bike__marker');
+  const cloudBoundaryMarker = document.querySelector('.cloud-boundary__marker');
 
   const detectCollision = function(item1, item2) {
-    
-
-    return !(
-      item1.right < item2.left ||
-      item1.left > item2.right ||
-      item1.bottom + 40 < item2.top ||
-      item1.top > item2.bottom
-    );
+    return Math.sqrt((item2.left - item1.left) * (item2.left - item1.left) + (item2.top - item1.top) * (item2.top - item1.top));
   };
 
   // -------------------------------
@@ -100,13 +94,18 @@
       cludBoundaryVelocity = 0;
     }
 
-    if(detectCollision(bmContainer.getBoundingClientRect(), cludBoundary.getBoundingClientRect())) {
+    let distanceFromCloud = detectCollision(bikeMarker.getBoundingClientRect(), cloudBoundaryMarker.getBoundingClientRect());
+
+    if (distanceFromCloud < 80) {
       if(!bmContainer.classList.contains('active')) {
         bmContainer.classList.add('active');
-      } else {
+      }
+    } else {
+      if(bmContainer.classList.contains('active')) {
         bmContainer.classList.remove('active');
       }
     }
+
 
     window.requestAnimationFrame(step);
   };
