@@ -159,7 +159,7 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
 }
 
 .mountain-1 {
-  fill: #88a85d;
+  fill: #97b45c;
   position: absolute;
   top: -18px;
   left: 80px;
@@ -169,11 +169,33 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
 }
 
 .mountain-2 {
-  fill: #88a85d;
+  fill: #97b45c;
   position: absolute;
   top: -5px;
   left: 119px;
   transform: rotate(56deg);
+  width: 60px;
+  z-index: -5;
+}
+
+
+
+.mountain-4 {
+  fill: #97b45c;
+position: absolute;
+top: 156px;
+left: 182px;
+transform: rotate(77deg);
+width: 60px;
+z-index: -5;
+}
+
+.mountain-5 {
+  fill: #97b45c;
+  position: absolute;
+  top: 180px;
+  left: 159px;
+  transform: rotate(10deg);
   width: 60px;
   z-index: -5;
 }
