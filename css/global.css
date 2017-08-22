@@ -200,6 +200,26 @@ z-index: -5;
   z-index: -5;
 }
 
+.rock-1 {
+  position: absolute;
+top: 127px;
+left: -8px;
+width: 20px;
+transform: rotate(-90deg);
+z-index: -1;
+fill: #6a6a6a;
+}
+
+.rock-2 {
+  position: absolute;
+      top: 199px;
+      left: 198px;
+      width: 20px;
+      transform: rotate(-206deg);
+      z-index: -1;
+      fill: #6a6a6a;
+}
+
 .rotating-outline-1 {
   position: absolute;
   top: 50%;
