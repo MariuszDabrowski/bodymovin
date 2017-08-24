@@ -1,9 +1,11 @@
-(function() {
 
-  const cludBoundary = document.querySelector('.cloud-boundary');
+
+  const cloudBoundary = document.querySelector('.cloud-boundary');
   const bike = document.querySelector('.bike');
   const bmContainer = document.querySelector('#bm');
   const umbrellaAnimation = document.querySelector('.umbrella-animation');
+  const rain = document.querySelector('.rain');
+  let space;
 
   // ------------------------
   // Bodymovin bike animation
@@ -60,8 +62,8 @@
   // Keyboard controls for the cloud
   // -------------------------------
 
-  let cludBoundaryAngle = 0;
-  let cludBoundaryVelocity = 0;
+  let cloudBoundaryAngle = 0;
+  let cloudBoundaryVelocity = 0;
   let left = false;
   let right = false;
   let lastDirection = '';
@@ -73,6 +75,8 @@
     } else if (e.keyCode === 39) {
       left = true;
       lastDirection = 'right';
+    } else if (e.keyCode === 32) {
+      space = true;
     }
   });
 
@@ -81,33 +85,35 @@
       left = false;
     } else if (e.keyCode === 39) {
       left = false;
+    } else if (e.keyCode === 32) {
+      space = false;
     }
   });
 
   const step = function() {
     if(left || right) {
-      if (cludBoundaryVelocity < 2) {
-        cludBoundaryVelocity += 0.2;
+      if (cloudBoundaryVelocity < 2) {
+        cloudBoundaryVelocity += 0.2;
       }
     }
 
-    cludBoundary.style.transform = `translateX(-50%) rotate(${cludBoundaryAngle}deg)`
+    cloudBoundary.style.transform = `translateX(-50%) rotate(${cloudBoundaryAngle}deg)`
 
-    if(cludBoundaryVelocity > 0) {
+    if(cloudBoundaryVelocity > 0) {
       if(lastDirection === 'left') {
-        cludBoundaryAngle -= cludBoundaryVelocity;
+        cloudBoundaryAngle -= cloudBoundaryVelocity;
       } else if (lastDirection === 'right') {
-        cludBoundaryAngle += cludBoundaryVelocity;
+        cloudBoundaryAngle += cloudBoundaryVelocity;
       }
 
-      cludBoundaryVelocity -= 0.05;
+      cloudBoundaryVelocity -= 0.05;
     } else {
-      cludBoundaryVelocity = 0;
+      cloudBoundaryVelocity = 0;
     }
 
     let distanceFromCloud = detectCollision(bikeMarker.getBoundingClientRect(), cloudBoundaryMarker.getBoundingClientRect());
 
-    if (distanceFromCloud < 80) {
+    if (distanceFromCloud < 80 && space) {
       if(!bmContainer.classList.contains('active')) {
         bmContainer.classList.add('active');
         umbrella.setDirection(1);
@@ -121,9 +127,19 @@
       }
     }
 
+    //
+    if (space) {
+      if(!rain.classList.contains('rain--active')) {
+        rain.classList.add('rain--active');
+      }
+    } else {
+      if(rain.classList.contains('rain--active')) {
+        rain.classList.remove('rain--active');
+      }
+    }
+
 
     window.requestAnimationFrame(step);
   };
 
   window.requestAnimationFrame(step);
-})();
