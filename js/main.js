@@ -16,11 +16,12 @@
 
     const Raindrop = function() {
       this.position = createVector(Math.random() * width, Math.random() * (height * -1), 0);
-      this.velocity = createVector(0, Math.random() * (3 - 2) + 2, 0);
+      this.velocity = createVector(0, Math.random() * (4 - 3) + 3, 0);
       this.render = function() {
-        noStroke();
-        fill('rgba(180,234,234, 1)');
-        ellipse(this.position.x, this.position.y,  1.5, 1.5);
+        stroke('rgba(180,234,234, 1)');
+        noFill();
+        line(this.position.x, this.position.y, this.position.x, this.position.y + Math.random() * (3 - 1) + 1);
+        // ellipse(this.position.x, this.position.y,  1.5, 1.5);
       }
       this.fall = function() {
         this.position.add(this.velocity);
@@ -32,7 +33,7 @@
       }
     };
 
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 200; i++) {
       raindrops.push(new Raindrop());
     }
   }
@@ -154,7 +155,7 @@
 
     let distanceFromCloud = detectCollision(bikeMarker.getBoundingClientRect(), cloudBoundaryMarker.getBoundingClientRect());
 
-    if (distanceFromCloud < 80 && space) {
+    if (distanceFromCloud < 80) {
       if(!bmContainer.classList.contains('active')) {
         bmContainer.classList.add('active');
         umbrella.setDirection(1);
