@@ -64,7 +64,6 @@ background: radial-gradient(ellipse at center, #b5c755 0%, #8fb467 50%);
   top: 40px;
   left: 50%;
   transform: translateX(-50%);
-  transition: background 0.1s;
 }
 
 .rain--active {
@@ -104,6 +103,7 @@ canvas {
   width: 40px;
   height: 80px;
   z-index: -2;
+  transform: rotate(0);
 }
 
 .bike__marker {

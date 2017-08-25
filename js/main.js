@@ -6,6 +6,47 @@
   const umbrellaAnimation = document.querySelector('.umbrella-animation');
   const rain = document.querySelector('.rain');
   let space;
+  let raindrops = [];
+
+
+  function setup() {
+    var canvas = createCanvas(rain.clientWidth, rain.clientHeight);
+
+    canvas.parent('rain');
+
+    const Raindrop = function() {
+      this.position = createVector(Math.random() * width, Math.random() * (height * -1), 0);
+      this.velocity = createVector(0, Math.random() * (3 - 2) + 2, 0);
+      this.render = function() {
+        noStroke();
+        fill('rgba(180,234,234, 1)');
+        ellipse(this.position.x, this.position.y,  1.5, 1.5);
+      }
+      this.fall = function() {
+        this.position.add(this.velocity);
+      }
+      this.checkBounds = function() {
+        if (this.position.y > height) {
+          this.position.y = 0;
+        }
+      }
+    };
+
+    for (var i = 0; i < 100; i++) {
+      raindrops.push(new Raindrop());
+    }
+  }
+
+  function draw() {
+    clear();
+
+    for (var i = 0; i < raindrops.length; i++) {
+      raindrops[i].render();
+      raindrops[i].fall();
+      raindrops[i].checkBounds();
+    }
+  }
+
 
   // ------------------------
   // Bodymovin bike animation
