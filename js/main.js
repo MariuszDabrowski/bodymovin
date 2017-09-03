@@ -1,187 +1,184 @@
+const cloudBoundary = document.querySelector('.cloud-boundary');
+const bike = document.querySelector('.bike');
+const bmContainer = document.querySelector('#bm');
+const umbrellaAnimation = document.querySelector('.umbrella-animation');
+const rain = document.querySelector('.rain');
+const rainDropsTop = document.querySelector('.rain__drops-top');
+let rainDropsTopPosition = rain.clientHeight * -1;
+const rainDropsBottom = document.querySelector('.rain__drops-bottom');
+let rainDropsBottomPosition = 0;
+let space;
+const light = document.querySelector('.light');
 
 
-  const cloudBoundary = document.querySelector('.cloud-boundary');
-  const bike = document.querySelector('.bike');
-  const bmContainer = document.querySelector('#bm');
-  const umbrellaAnimation = document.querySelector('.umbrella-animation');
-  const rain = document.querySelector('.rain');
-  let space;
-  let raindrops = [];
+// ------------------------
+// Bodymovin bike animation
+// ------------------------
+
+var animation = bodymovin.loadAnimation({
+  container: bmContainer,
+  renderer: 'svg',
+  loop: true,
+  autoplay: true,
+  path: 'json/data.json',
+});
+
+animation.setSpeed(1);
+
+var umbrella = bodymovin.loadAnimation({
+  container: umbrellaAnimation,
+  renderer: 'svg',
+  loop: false,
+  autoplay: false,
+  path: 'json/umbrella.json',
+});
+
+umbrella.setSpeed(2);
+
+// ------------------------------
+// Anime.js animation around path
+// ------------------------------
+
+var path = anime.path('.outline');
+
+var motionPath = anime({
+  targets: '.bike',
+  translateX: path('x'),
+  translateY: path('y'),
+  rotate: path('angle'),
+  easing: 'linear',
+  duration: 15000,
+  loop: true
+});
+
+// -----------------------------------------------
+// Detect collision between the bike and the cloud
+// -----------------------------------------------
+
+const bikeMarker = document.querySelector('.bike__marker');
+const cloudBoundaryMarker = document.querySelector('.cloud-boundary__marker');
+
+const detectCollision = function(item1, item2) {
+  return Math.sqrt((item2.left - item1.left) * (item2.left - item1.left) + (item2.top - item1.top) * (item2.top - item1.top));
+};
+
+// -------------------------------
+// Keyboard controls for the cloud
+// -------------------------------
+
+let cloudBoundaryAngle = 0;
+let cloudBoundaryVelocity = 0;
+let left = false;
+let right = false;
+let lastDirection = '';
+
+document.addEventListener('keydown', (e) => {
+  if(e.keyCode === 37) {
+    left = true;
+    lastDirection = 'left';
+  } else if (e.keyCode === 39) {
+    left = true;
+    lastDirection = 'right';
+  } else if (e.keyCode === 32) {
+    space = true;
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  if(e.keyCode === 37) {
+    left = false;
+  } else if (e.keyCode === 39) {
+    left = false;
+  } else if (e.keyCode === 32) {
+    space = false;
+  }
+});
 
 
-  function setup() {
-    var canvas = createCanvas(rain.clientWidth, rain.clientHeight);
 
-    canvas.parent('rain');
+const step = function() {
 
-    const Raindrop = function() {
-      this.position = createVector(Math.random() * width, Math.random() * (height * -1), 0);
-      this.velocity = createVector(0, Math.random() * (4 - 3) + 3, 0);
-      this.render = function() {
-        stroke('rgba(180,234,234, 1)');
-        noFill();
-        line(this.position.x, this.position.y, this.position.x, this.position.y + Math.random() * (3 - 1) + 1);
-        // ellipse(this.position.x, this.position.y,  1.5, 1.5);
-      }
-      this.fall = function() {
-        this.position.add(this.velocity);
-      }
-      this.checkBounds = function() {
-        if (this.position.y > height) {
-          this.position.y = 0;
-        }
-      }
-    };
+  // --------------
+  // Cloud movement
+  // --------------
 
-    for (var i = 0; i < 200; i++) {
-      raindrops.push(new Raindrop());
+  if(left || right) {
+    if (cloudBoundaryVelocity < 2) {
+      cloudBoundaryVelocity += 0.2;
     }
   }
 
-  function draw() {
-    clear();
+  cloudBoundary.style.transform = `translateX(-50%) rotate(${cloudBoundaryAngle}deg)`
 
-    for (var i = 0; i < raindrops.length; i++) {
-      raindrops[i].render();
-      raindrops[i].fall();
-      raindrops[i].checkBounds();
+  if(cloudBoundaryVelocity > 0) {
+    if(lastDirection === 'left') {
+      cloudBoundaryAngle -= cloudBoundaryVelocity;
+    } else if (lastDirection === 'right') {
+      cloudBoundaryAngle += cloudBoundaryVelocity;
+    }
+
+    cloudBoundaryVelocity -= 0.05;
+  } else {
+    cloudBoundaryVelocity = 0;
+  }
+
+  // ------------------------------------
+  // Trigger animations based on distance
+  // ------------------------------------
+
+  let distanceFromCloud = detectCollision(bikeMarker.getBoundingClientRect(), cloudBoundaryMarker.getBoundingClientRect());
+
+  if (distanceFromCloud < 60) {
+    light.classList.add('light--active');
+  } else {
+    if (light.classList.contains('light--active')) {
+      light.classList.remove('light--active');
     }
   }
 
-
-  // ------------------------
-  // Bodymovin bike animation
-  // ------------------------
-
-  var animation = bodymovin.loadAnimation({
-    container: bmContainer,
-    renderer: 'svg',
-    loop: true,
-    autoplay: true,
-    path: 'json/data.json',
-  });
-
-  animation.setSpeed(1);
-
-  var umbrella = bodymovin.loadAnimation({
-    container: umbrellaAnimation,
-    renderer: 'svg',
-    loop: false,
-    autoplay: false,
-    path: 'json/umbrella.json',
-  });
-
-  umbrella.setSpeed(2);
-
-  // ------------------------------
-  // Anime.js animation around path
-  // ------------------------------
-
-  var path = anime.path('.outline');
-
-  var motionPath = anime({
-    targets: '.bike',
-    translateX: path('x'),
-    translateY: path('y'),
-    rotate: path('angle'),
-    easing: 'linear',
-    duration: 15000,
-    loop: true
-  });
-
-  // -----------------------------------------------
-  // Detect collision between the bike and the cloud
-  // -----------------------------------------------
-
-  const bikeMarker = document.querySelector('.bike__marker');
-  const cloudBoundaryMarker = document.querySelector('.cloud-boundary__marker');
-
-  const detectCollision = function(item1, item2) {
-    return Math.sqrt((item2.left - item1.left) * (item2.left - item1.left) + (item2.top - item1.top) * (item2.top - item1.top));
-  };
-
-  // -------------------------------
-  // Keyboard controls for the cloud
-  // -------------------------------
-
-  let cloudBoundaryAngle = 0;
-  let cloudBoundaryVelocity = 0;
-  let left = false;
-  let right = false;
-  let lastDirection = '';
-
-  document.addEventListener('keydown', (e) => {
-    if(e.keyCode === 37) {
-      left = true;
-      lastDirection = 'left';
-    } else if (e.keyCode === 39) {
-      left = true;
-      lastDirection = 'right';
-    } else if (e.keyCode === 32) {
-      space = true;
+  if (distanceFromCloud < 80 && space) {
+    if(!bmContainer.classList.contains('active')) {
+      bmContainer.classList.add('active');
+      umbrella.setDirection(1);
+      umbrella.play();
     }
-  });
-
-  document.addEventListener('keyup', (e) => {
-    if(e.keyCode === 37) {
-      left = false;
-    } else if (e.keyCode === 39) {
-      left = false;
-    } else if (e.keyCode === 32) {
-      space = false;
+  } else {
+    if(bmContainer.classList.contains('active')) {
+      bmContainer.classList.remove('active');
+      umbrella.setDirection(-1);
+      umbrella.play();
     }
-  });
+  }
 
-  const step = function() {
-    if(left || right) {
-      if (cloudBoundaryVelocity < 2) {
-        cloudBoundaryVelocity += 0.2;
-      }
+  // -------------------
+  // Rain on space press
+  // -------------------
+
+  if (space) {
+    if(!rain.classList.contains('rain--active')) {
+      rain.classList.add('rain--active');
     }
-
-    cloudBoundary.style.transform = `translateX(-50%) rotate(${cloudBoundaryAngle}deg)`
-
-    if(cloudBoundaryVelocity > 0) {
-      if(lastDirection === 'left') {
-        cloudBoundaryAngle -= cloudBoundaryVelocity;
-      } else if (lastDirection === 'right') {
-        cloudBoundaryAngle += cloudBoundaryVelocity;
-      }
-
-      cloudBoundaryVelocity -= 0.05;
-    } else {
-      cloudBoundaryVelocity = 0;
+  } else {
+    if(rain.classList.contains('rain--active')) {
+      rain.classList.remove('rain--active');
     }
+  }
 
-    let distanceFromCloud = detectCollision(bikeMarker.getBoundingClientRect(), cloudBoundaryMarker.getBoundingClientRect());
+  rainDropsTop.style.top = `${rainDropsTopPosition}px`;
+  rainDropsBottom.style.top = `${rainDropsBottomPosition}px`;
 
-    if (distanceFromCloud < 80) {
-      if(!bmContainer.classList.contains('active')) {
-        bmContainer.classList.add('active');
-        umbrella.setDirection(1);
-        umbrella.play();
-      }
-    } else {
-      if(bmContainer.classList.contains('active')) {
-        bmContainer.classList.remove('active');
-        umbrella.setDirection(-1);
-        umbrella.play();
-      }
-    }
+  rainDropsTopPosition += 3;
+  rainDropsBottomPosition += 3;
 
-    //
-    if (space) {
-      if(!rain.classList.contains('rain--active')) {
-        rain.classList.add('rain--active');
-      }
-    } else {
-      if(rain.classList.contains('rain--active')) {
-        rain.classList.remove('rain--active');
-      }
-    }
+  if (rainDropsTopPosition >= 0) {
+    rainDropsTopPosition = rain.clientHeight * -1;
+  }
 
-
-    window.requestAnimationFrame(step);
-  };
+  if (rainDropsBottomPosition >= rain.clientHeight) {
+    rainDropsBottomPosition = 0;
+  }
 
   window.requestAnimationFrame(step);
+};
+
+window.requestAnimationFrame(step);
